@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shoes - MakeUp & Beauty | Boutique</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --nude-light: #f9f5f2;
+            --nude-medium: #e8d5c4;
+            --rose-dust: #d4a373;
+            --charcoal: #333333;
+            --white: #ffffff;
+            --gold: #c5a059;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--nude-light);
+            color: var(--charcoal);
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: var(--white);
+            padding: 40px 20px;
+            text-align: center;
+            border-bottom: 1px solid var(--nude-medium);
+        }
+
+        .logo-container img {
+            max-width: 300px;
+            height: auto;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            letter-spacing: 2px;
+            color: var(--charcoal);
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-style: italic;
+            font-size: 0.9rem;
+            color: var(--rose-dust);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .catalog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .product-card {
+            background: var(--white);
+            border-radius: 5px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 350px;
+            overflow: hidden;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .product-info {
+            padding: 20px;
+            text-align: center;
+            flex-grow: 1;
+        }
+
+        .product-info h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: var(--charcoal);
+        }
+
+        .btn-view {
+            display: inline-block;
+            padding: 12px 25px;
+            background-color: var(--charcoal);
+            color: var(--white);
+            text-decoration: none;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: background 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-view:hover {
+            background-color: var(--rose-dust);
+        }
+
+        /* --- ESTILOS DEL CARRITO --- */
+        #cart-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--charcoal);
+            color: white;
+            padding: 15px;
+            border-radius: 50px;
+            cursor: pointer;
+            z-index: 1001;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #cart-count {
+            background: var(--rose-dust);
+            padding: 2px 8px;
+            border-radius: 50%;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        #cart-panel {
+            position: fixed;
+            right: -400px;
+            top: 0;
+            width: 350px;
+            height: 100%;
+            background: white;
+            box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+            z-index: 1002;
+            transition: 0.4s;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #cart-panel.active {
+            right: 0;
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--nude-medium);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        #cart-items {
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cart-item img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .cart-item-info {
+            flex-grow: 1;
+        }
+
+        .cart-item-info h4 {
+            font-size: 0.9rem;
+            margin-bottom: 2px;
+        }
+
+        .remove-item {
+            color: #ff4444;
+            cursor: pointer;
+            font-size: 1.2rem;
+            background: none;
+            border: none;
+        }
+
+        .cart-footer {
+            margin-top: 20px;
+        }
+
+        .btn-whatsapp-order {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: #25d366;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+        }
+
+        .close-cart {
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+
+        /* Botón WhatsApp Flotante */
+        .boton-ws {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            bottom: 25px;
+            right: 25px;
+            background-color: #25d366;
+            color: #FFF;
+            border-radius: 50px;
+            text-align: center;
+            font-size: 30px;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.3);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: transform 0.3s ease;
+        }
+
+        .boton-ws:hover { transform: scale(1.1); }
+
+        footer {
+            text-align: center;
+            padding: 40px;
+            font-size: 0.8rem;
+            color: #999;
+            background: var(--white);
+            margin-top: 50px;
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 1.4rem; }
+            .product-image { height: 300px; }
+            #cart-panel { width: 100%; right: -100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="cart-button" onclick="toggleCart()">
+        <span>🛒</span>
+        <span id="cart-count">0</span>
+    </div>
+
+    <div id="cart-panel">
+        <div class="cart-header">
+            <h3>Mis Elegidos</h3>
+            <span class="close-cart" onclick="toggleCart()">&times;</span>
+        </div>
+        <div id="cart-items">
+            </div>
+        <div class="cart-footer">
+            <a href="#" class="btn-whatsapp-order" onclick="sendOrder()">
+                Pedir por WhatsApp
+            </a>
+        </div>
+    </div>
+
+    <header>
+        <div class="logo-container">
+            <img src="logo.jpeg" alt="Logo Alexandra Crespin">
+        </div>
+        <h1>Shoes - MakeUp & Beauty</h1>
+        <p class="subtitle">Elegancia y confort en cada paso</p>
+    </header>
+
+    </header> <section style="max-width: 1200px; margin: 40px auto; display: flex; align-items: center; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 5px 20px rgba(0,0,0,0.05); flex-wrap: wrap;">
+        
+        <div style="flex: 1 1 400px; height: 500px; overflow: hidden;">
+            <img src="DBTJ6423.jpg" alt="Colección Premium" style="width: 100%; height: 100%; object-fit: cover; object-position: center;">
+        </div>
+
+        <div style="flex: 2 1 300px; padding: 60px; text-align: left;">
+            <span style="color: #c5a059; text-transform: uppercase; letter-spacing: 3px; font-size: 0.8rem; font-weight: bold;">Nueva Colección 2026</span>
+            <h2 style="font-family: 'Playfair Display', serif; font-size: 2.5rem; margin: 20px 0; color: #333; line-height: 1.2;">Encuentra el par perfecto para tu estilo</h2>
+            <p style="color: #666; margin-bottom: 30px; font-size: 1.1rem;">Diseños exclusivos que combinan la altura de nuestras plataformas con la comodidad que tus pies merecen.</p>
+            <a href="#catalogo" style="display: inline-block; padding: 15px 40px; border: 1px solid #333; color: #333; text-decoration: none; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 2px; transition: all 0.3s;">Explorar Modelos</a>
+        </div>
+    </section>
+    
+
+    <div id="catalogo" class="container"> 
+
+
+    <div class="container">
+        <section class="catalog-grid">
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="11.jpeg" alt="Golden Studded">
+                </div>
+                <div class="product-info">
+                    <h3>Golden Studded</h3>
+                    <button class="btn-view" onclick="addToCart('Golden Studded', 'N°1', '11.jpeg')">Codigo N°1</button>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="22.jpeg" alt="Classic Buckle">
+                </div>
+                <div class="product-info">
+                    <h3>Classic Buckle</h3>
+                    <button class="btn-view" onclick="addToCart('Classic Buckle', 'N°2', '22.jpeg')">Codigo N°2</button>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="33.jpeg" alt="Nature Weave">
+                </div>
+                <div class="product-info">
+                    <h3>Nature Weave</h3>
+                    <button class="btn-view" onclick="addToCart('Nature Weave', 'N°3', '33.jpeg')">Codigo N°3</button>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="44.jpeg" alt="Bow Elegance">
+                </div>
+                <div class="product-info">
+                    <h3>Bow Elegance</h3>
+                    <button class="btn-view" onclick="addToCart('Bow Elegance', 'N°4', '44.jpeg')">Codigo N°4</button>
+                </div>
+            </article> 
+            
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="160.jpeg" alt="Sandalia rock four">
+                </div>
+                <div class="product-info">
+                    <h3>Aria Sand</h3> 
+                    <button class="btn-view" onclick="addToCart('Aria Sand', 'N°5', '160.jpeg')">Codigo N°5</button>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="150.jpeg" alt="Sandalia Silver Tiras">
+                </div>
+                <div class="product-info">
+                    <h3>Riviera Rope</h3>
+                    <button class="btn-view" onclick="addToCart('Riviera Rope', 'N°6', '150.jpeg')">Codigo N°6</button>
+                </div>
+            </article>
+                
+                
+                <article class="product-card">
+                <div class="product-image">
+                    <img src="170.jpeg" alt="Sandalia Silver Tiras">
+                </div>
+                <div class="product-info">
+                    <h3>Lino Breeze</h3>
+                    
+                    <button class="btn-view" onclick="addToCart('Lino Breeze', 'N°7', '170.jpeg')">Codigo N°7</button>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="140.jpeg" alt="Sandalia Silver Tiras">
+                </div>
+                <div class="product-info">
+                    <h3>Luna Rose</h3>
+                    
+                    <button class="btn-view" onclick="addToCart('Luna Rose', 'N°8', '140.jpeg')">Codigo N°8</button>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="55.jpeg" alt="Sandalia H Designer">
+                </div>
+                <div class="product-info">
+                    <h3>Ivory Glam</h3>
+                    
+                    <button class="btn-view" onclick="addToCart('Ivory Glam', 'N°9', '55.jpeg')">Codigo N°9</button>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="66.jpeg" alt="Sandalia Perlas">
+                </div>
+                <div class="product-info">
+                    <h3>Pearl Essence</h3>
+                    
+                    <button class="btn-view" onclick="addToCart('Pearl Essence', 'N°10', '66.jpeg')">Codigo N°10</button>
+                
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="77.jpeg" alt="Sandalia Silver Tiras">
+                </div>
+                <div class="product-info">
+                    <h3>Silver Night</h3>
+                    
+                    <button class="btn-view" onclick="addToCart('Silver Night', 'N°11', '77.jpeg')">Codigo N°11</button>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="88.jpeg" alt="Sandalia Trenzada">
+                </div>
+                <div class="product-info">
+                    <h3>Soft Knot</h3>
+                   
+                    <button class="btn-view" onclick="addToCart('Soft Knot', 'N°12', '88.jpeg')">Codigo N°12</button>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="99.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Roman Empress</h3>
+                    
+                    <button class="btn-view" onclick="addToCart('Roman Empress', 'N°13', '99.jpeg')">Codigo N°13</button>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="180.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Estelar Straps</h3>
+                    
+                    <button class="btn-view" onclick="addToCart('Estelar Straps', 'N°14', '180.jpeg')">Codigo N°14</button>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="190.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Luna black</h3>
+                   
+                    <button class="btn-view" onclick="addToCart('Luna black', 'N°15', '190.jpeg')">Codigo N°15</button>
+                </div>
+            </article>
+            
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="200.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Rosé Twist</h3>
+                    
+                    <button class="btn-view" onclick="addToCart('Rosé Twist', 'N°16', '200.jpeg')">Codigo N°16</button>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="210.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Duna Knot</h3>
+                    
+                    <button class="btn-view" onclick="addToCart('Duna Knot', 'N°17', '210.jpeg')">Codigo N°17</button>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="220.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Entrelazado Época</h3>
+                    
+                    <button class="btn-view" onclick="addToCart('Entrelazado Época', 'N°18', '220.jpeg')">Codigo N°18</button>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="230.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Roman Empress</h3>
+                    
+                    <button class="btn-view" onclick="addToCart('Roman Empress', 'N°19', '230.jpeg')">Codigo N°19</button>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="240.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Sahara Croco</h3>
+                    
+                    <button class="btn-view" onclick="addToCart('Sahara Croco', 'N°20', '240.jpeg')">Codigo N°20</button>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="250.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Soleil Bijou</h3>
+                    
+                    <button class="btn-view" onclick="addToCart('Soleil Bijou', 'N°21', '250.jpeg')">Codigo N°21</button>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="260.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Eclat de Oro</h3>
+                    <button class="btn-view" onclick="addToCart('Eclat de Oro', 'N°22', '260.jpeg')">Codigo N°22</button>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="270.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Aura Gold</h3>
+                    <button class="btn-view" onclick="addToCart('Aura Gold', 'N°23', '270.jpeg')">Codigo N°23</button>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="280.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Ivory Muse</h3>
+                    
+                    <button class="btn-view" onclick="addToCart('Ivory Muse', 'N°24', '280.jpeg')">Codigo N°24</button>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="290.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Peonía Soft</h3>
+                    
+                    <button class="btn-view" onclick="addToCart('Peonía Soft', 'N°25', '290.jpeg')">Codigo N°25</button>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="300.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Sienna Glow</h3>
+                   
+                    <button class="btn-view" onclick="addToCart('Sienna Glow', 'N°26', '300.jpeg')">Codigo N°26</button>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="310.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Bronce Stellar</h3>
+                   
+                    <button class="btn-view" onclick="addToCart('Bronce Stellar', 'N°27', '310.jpeg')">Codigo N°27</button>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="320.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Prisma Gold</h3>
+                   
+                    <button class="btn-view" onclick="addToCart('Prisma Gold', 'N°28', '320.jpeg')">Codigo N°28</button>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="330.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Aura Rainbow</h3>
+                   
+                    <button class="btn-view" onclick="addToCart('Aura Rainbow', 'N°29', '330.jpeg')">Codigo N°29</button>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="340.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Golden Dream</h3>
+                   
+                    <button class="btn-view" onclick="addToCart('Golden Dream', 'N°30', '340.jpeg')">Codigo N°30</button>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="350.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Emerald Enchant</h3>
+                    
+                    <button class="btn-view" onclick="addToCart('Emerald Enchant', 'N°31', '350.jpeg')">Codigo N°31</button>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="360.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Amber Radiance</h3>
+                    
+                    <button class="btn-view" onclick="addToCart('Amber Radiance', 'N°32', '360.jpeg')">Codigo N°32</button>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="370.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Crystal Moonlight</h3>
+                    
+                    <button class="btn-view" onclick="addToCart('Crystal Moonlight', 'N°33', '370.jpeg')">Codigo N°33</button>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="380.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Midnight Sapphire</h3>
+                    
+                    <button class="btn-view" onclick="addToCart('Midnight Sapphire', 'N°34', '380.jpeg')">Codigo N°34</button>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="390.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Velvet Twilight</h3>
+                    
+                    <button class="btn-view" onclick="addToCart('Velvet Twilight', 'N°35', '390.jpeg')">Codigo N°35</button>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="400.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Starlight Serenity</h3>
+                    
+                    <button class="btn-view" onclick="addToCart('Starlight Serenity', 'N°36', '400.jpeg')">Codigo N°36</button>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="420.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Royal Regalia</h3>
+                   
+                    <button class="btn-view" onclick="addToCart('Royal Regalia', 'N°37', '420.jpeg')">Codigo N°37</button>
+                </div>
+            </article>
+
+            
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="430.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Sienna Cross</h3>
+                    
+                    <button class="btn-view" onclick="addToCart('Sienna Cross', 'N°38', '430.jpeg')">Codigo N°38</button>
+                </div>
+            </article>
+
+            
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="440.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Monochrome Chic</h3>
+                    
+                    <button class="btn-view" onclick="addToCart('Monochrome Chic', 'N°39', '440.jpeg')">Codigo N°39</button>
+                </div>
+            </article>
+
+            
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="450.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Nautical Noir</h3>
+                    
+                    <button class="btn-view" onclick="addToCart('Nautical Noir', 'N°40', '450.jpeg')">Codigo N°40</button>
+                </div>
+            </article>
+
+            
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="460.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Ivory Buckle</h3>
+                    
+                    <button class="btn-view" onclick="addToCart('Ivory Buckle', 'N°41', '460.jpeg')">Codigo N°41</button>
+                </div>
+            </article>
+
+            
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="470.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Sand Class</h3>
+                    
+                    <button class="btn-view" onclick="addToCart('Sand Class', 'N°42', '470.jpeg')">Codigo N°42</button>
+                </div>
+            </article>
+
+            
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="480.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Boreal Sand</h3>
+                    
+                    <button class="btn-view" onclick="addToCart('Boreal Sand', 'N°43', '480.jpeg')">Codigo N°43</button>
+                </div>
+            </article>
+
+            
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="490.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Blush Braid</h3>
+                    
+                    <button class="btn-view" onclick="addToCart('Blush Braid', 'N°44', '490.jpeg')">Codigo N°44</button>
+                </div>
+            </article>
+
+            
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="500.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Pure Oro</h3>
+                   
+                    <button class="btn-view" onclick="addToCart('Pure Oro', 'N°45', '500.jpeg')">Codigo N°45</button>
+                </div>
+            </article>
+
+            
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="510.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Aria Sand</h3>
+                    
+                    <button class="btn-view" onclick="addToCart('Aria Sand', 'N°46', '510.jpeg')">Codigo N°46</button>
+                </div>
+            </article>
+
+            
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="520.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Venza Nude</h3>
+                    
+                    <button class="btn-view" onclick="addToCart('Venza Nude', 'N°47', '520.jpeg')">Codigo N°47</button>
+                </div>
+            </article>
+
+            
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="530.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Riviera Rope</h3>
+                    
+                    <button class="btn-view" onclick="addToCart('Riviera Rope', 'N°48', '530.jpeg')">Codigo N°48</button>
+                </div>
+            </article>
+
+            
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="540.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Heritage Sand</h3>
+                    
+                    <button class="btn-view" onclick="addToCart('Heritage Sand', 'N°49', '540.jpeg')">Codigo N°49</button>
+                </div>
+            </article>
+
+            
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="550.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Boho Chic Royal</h3>
+                   
+                    <button class="btn-view" onclick="addToCart('Boho Chic Royal', 'N°50', '550.jpeg')">Codigo N°50</button>
+                </div>
+            </article>
+
+            
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="560.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Peonía Soft</h3>
+                    
+                    <button class="btn-view" onclick="addToCart('Peonía Soft', 'N°51', '560.jpeg')">Codigo N°51</button>
+                </div>
+            </article>
+
+            
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="570.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Roman Empress</h3>
+                    
+                    <button class="btn-view" onclick="addToCart('Roman Empress', 'N°52', '570.jpeg')">Codigo N°52</button>
+                </div>
+            </article>
+
+            
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="580.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Arena Fina</h3>
+                    
+                    <button class="btn-view" onclick="addToCart('Arena Fina', 'N°53', '580.jpeg')">Codigo N°53</button>
+                </div>
+            </article>
+
+            
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="610.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Beige Atemporal</h3>
+                    
+                    <button class="btn-view" onclick="addToCart('Beige Atemporal', 'N°54', '610.jpeg')">Codigo N°54</button>
+                </div>
+
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="N1.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Coral del Sur</h3>
+                    
+                    <button class="btn-view" onclick="addToCart('Coral del Sur', 'N°55', 'N1.jpeg')">Codigo N°55</button>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="N2.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Broncita Mate</h3>
+                    
+                    <button class="btn-view" onclick="addToCart('Broncita Mate', 'N°56', 'N2.jpeg')">Codigo N°56</button>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="N3.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Hematita Gris</h3>
+                    
+                    <button class="btn-view" onclick="addToCart('Hematita Gris', 'N°57', 'N3.jpeg')">Codigo N°57</button>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="N4.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Topacio de Otoño</h3>
+                    
+                    <button class="btn-view" onclick="addToCart('Topacio de Otoño', 'N°58', 'N4.jpeg')">Codigo N°58</button>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="N5.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Obsidiana Pulida</h3>
+                    
+                    <button class="btn-view" onclick="addToCart('Obsidiana Pulida', 'N°59', 'N5.jpeg')">Codigo N°59</button>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="N6.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Malaquita Profunda</h3>
+                    
+                    <button class="btn-view" onclick="addToCart('Malaquita Profunda', 'N°60', 'N6.jpeg')">Codigo N°60</button>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="N7.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Pirita Solar</h3>
+                    
+                    <button class="btn-view" onclick="addToCart('Pirita Solar', 'N°61', 'N7.jpeg')">Codigo N°61</button>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="N8.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Ágata de Arena</h3>
+                    
+                    <button class="btn-view" onclick="addToCart('Ágata de Arena', 'N°62', 'N8.jpeg')">Codigo N°62</button>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="N9.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Jaspe Terracota</h3>
+                    
+                    <button class="btn-view" onclick="addToCart('Jaspe Terracota', 'N°63', 'N9.jpeg')">Codigo N°63</button>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="N10.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Ámbar del Báltico</h3>
+                    
+                    <button class="btn-view" onclick="addToCart('Ámbar del Báltico', 'N°64', 'N10.jpeg')">Codigo N°64 </button>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="N11.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Cuarzo Ahumado</h3>
+                    
+                    <button class="btn-view" onclick="addToCart('Cuarzo Ahumado', 'N°65', 'N11.jpeg')">Codigo N°65</button>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="N12.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Amatista Real</h3>
+                    
+                    <button class="btn-view" onclick="addToCart('Amatista Real', 'N°66', 'N12.jpeg')">Codigo N°66</button>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="N13.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Jade de Oriente</h3>
+                    
+                    <button class="btn-view" onclick="addToCart('Jade de Oriente', 'N°67', 'N13.jpeg')">Codigo N°67</button>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="N14.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Ópalo de Fuego</h3>
+                    
+                    <button class="btn-view" onclick="addToCart('Ópalo de Fuego', 'N°68', 'N14.jpeg')">Codigo N°68</button>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="N15.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Perla de Rocío</h3>
+                    
+                    <button class="btn-view" onclick="addToCart('Perla de Rocío', 'N°69', 'N15.jpeg')">Codigo N°69</button>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="N16.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Esmeralda Costera</h3>
+                    
+                    <button class="btn-view" onclick="addToCart('Esmeralda Costera', 'N°70', 'N16.jpeg')">Codigo N°70</button>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="N17.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Rubí Imperial</h3>
+                    
+                    <button class="btn-view" onclick="addToCart('Rubí Imperial', 'N°71', 'N17.jpeg')">Codigo N°71</button>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">
+                    <img src="N18.jpeg" alt="Sandalia Romana Oro">
+                </div>
+                <div class="product-info">
+                    <h3>Diamante de Sal</h3>
+                    
+                    <button class="btn-view" onclick="addToCart('Diamante de Sal', 'N°72', 'N18.jpeg')">Codigo N°72</button>
+                </div>
+            </article>
+
+            </section>
+    </div>
+
+    <a href="https://wa.me/+50372076741" class="boton-ws" target="_blank" title="Escríbenos">💬</a>
+
+    <footer>
+        <p>&copy; 2026 Shoes - MakeUp & Beauty. Todos los derechos reservados.</p>
+        <p>Diseño exclusivo para Alexandra Crespin</p>
+    </footer>
+
+    <script>
+        let cart = [];
+
+        function toggleCart() {
+            document.getElementById('cart-panel').classList.toggle('active');
+        }
+
+        function addToCart(name, code, image) {
+            // Verificar si el producto ya está en el carrito
+            const exists = cart.find(item => item.code === code);
+            if (!exists) {
+                cart.push({ name, code, image });
+                updateCartUI();
+                // Opcional: abrir el carrito automáticamente al agregar
+                if(!document.getElementById('cart-panel').classList.contains('active')) {
+                    toggleCart();
+                }
+            } else {
+                alert("Este producto ya está en tu lista.");
+            }
+        }
+
+        function removeItem(code) {
+            cart = cart.filter(item => item.code !== code);
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const cartItems = document.getElementById('cart-items');
+            const cartCount = document.getElementById('cart-count');
+            
+            cartCount.innerText = cart.length;
+            cartItems.innerHTML = '';
+
+            cart.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'cart-item';
+                div.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}">
+                    <div class="cart-item-info">
+                        <h4>${item.name}</h4>
+                        <small>Código: ${item.code}</small>
+                    </div>
+                    <button class="remove-item" onclick="removeItem('${item.code}')">&times;</button>
+                `;
+                cartItems.appendChild(div);
+            });
+        }
+
+        function sendOrder() {
+    if (cart.length === 0) {
+        alert("El carrito está vacío");
+        return;
+    }
+
+    // 1. Creamos el texto de forma natural
+    let textoMensaje = "¡Hola! Me interesan los siguientes productos de Shoes - MakeUp & Beauty:\n\n";
+    
+    cart.forEach((item, index) => {
+        textoMensaje += `${index + 1}. *${item.name}* (Código: ${item.code})\n`;
+    });
+
+    // 2. Codificamos TODO el texto para que WhatsApp lo entienda al 100%
+    const mensajeFinal = encodeURIComponent(textoMensaje);
+    
+    // 3. Construimos la URL (asegúrate de que el número no tenga el '+')
+    const whatsappUrl = `https://wa.me/50372076741?text=${mensajeFinal}`;
+    
+    window.open(whatsappUrl, '_blank');
+}
+    </script>
+</body>
+</html>
